@@ -15,6 +15,8 @@ Main
 Sub Main()
 	Dim line
 
+	Help
+
 	Do While True
 		WScript.StdOut.Write(">>> ")
 
@@ -25,12 +27,8 @@ Sub Main()
 
 		If LCase(line) = "exit" Then Exit Do
 
-		If LCase(line) = "help" Or line = "?" Then
-			WScript.StdOut.Write "A simple interactive VBScript Shell." & vbNewLine & vbNewLine _
-				& vbTab & "help | ?                  Print this help." & vbNewLine _
-				& vbTab & "exit                      Exit the shell." & vbNewLine _
-				& vbTab & "import ""\PATH\TO\my.vbs""  Load and execute the contents of the VBScript." & vbNewLine _
-				& vbNewLine
+		If line = "?" Then
+			Help
 		Else
 			On Error Resume Next
 			Err.Clear
@@ -39,6 +37,17 @@ Sub Main()
 			On Error Goto 0
 		End If
 	Loop
+End Sub
+
+' ------------------------------------------------------------------------------
+' Print help.
+' ------------------------------------------------------------------------------
+Private Sub Help()
+	WScript.StdOut.Write "A simple interactive VBScript Shell." & vbNewLine & vbNewLine _
+		& vbTab & "help | ?                  Print this help." & vbNewLine _
+		& vbTab & "exit                      Exit the shell." & vbNewLine _
+		& vbTab & "import ""\PATH\TO\my.vbs""  Load and execute the contents of the VBScript." & vbNewLine _
+		& vbNewLine
 End Sub
 
 ' ------------------------------------------------------------------------------
