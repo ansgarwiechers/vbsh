@@ -1,13 +1,13 @@
-' ------------------------------------------------------------------------------
-' A simple interactive VBScript shell taken from:
-'
-'   <http://www.kryogenix.org/days/2004/04/01/interactiveVbscript>
-'
-' For my own convenience I added line-continuation, and import function, and a
-' help message.
-' ------------------------------------------------------------------------------
+'! A simple interactive VBScript shell.
+'!
+'! @see http://www.kryogenix.org/days/2004/04/01/interactiveVbscript
+'!
+'! For my own convenience I added line-continuation, some helper functions (cd,
+'! pwd, ls, import), and a help message.
 
 Option Explicit
+
+Private Const InitScript = "%USERPROFILE%\init.vbs"
 
 Main
 
@@ -15,6 +15,7 @@ Main
 Sub Main()
 	Dim line
 
+	ImportInitScript
 	Help
 
 	Do While True
@@ -39,23 +40,38 @@ Sub Main()
 	Loop
 End Sub
 
-' ------------------------------------------------------------------------------
-' Print help.
-' ------------------------------------------------------------------------------
+'! Import initialization script if present.
+Private Sub ImportInitScript
+	Dim sh, fso, path, initScriptExists
+
+	Set sh  = CreateObject("WScript.Shell")
+	Set fso = CreateObject("Scripting.FileSystemObject")
+
+	path = sh.ExpandEnvironmentStrings(InitScript)
+	initScriptExists = fso.FileExists(path)
+
+	Set sh  = Nothing
+	Set fso = Nothing
+
+	If initScriptExists Then Import path
+End Sub
+
+'! Print a help message.
 Private Sub Help()
 	WScript.StdOut.Write "A simple interactive VBScript Shell." & vbNewLine & vbNewLine _
 		& vbTab & "help | ?                  Print this help." & vbNewLine _
-		& vbTab & "exit                      Exit the shell." & vbNewLine _
 		& vbTab & "import ""\PATH\TO\my.vbs""  Load and execute the contents of the VBScript." & vbNewLine _
+		& vbTab & "exit                      Exit the shell." & vbNewLine _
+		& vbNewLine & "Customize with an (optional) init script '" & InitScript & "'." & vbNewLine _
 		& vbNewLine
 End Sub
 
-' ------------------------------------------------------------------------------
-' Import the first occurrence of the given filename from the working directory
-' or any directory in the %PATH%.
-'
-' <http://gazeek.com/coding/importing-vbs-files-in-your-vbscript-project/>
-' ------------------------------------------------------------------------------
+'! Import the first occurrence of the given filename from the working directory
+'! or any directory in the %PATH%.
+'!
+'! @param  filename   Name of the file to import.
+'!
+'! @see http://gazeek.com/coding/importing-vbs-files-in-your-vbscript-project/
 Private Sub Import(ByVal filename)
 	Dim fso, sh, file, code, dir
 
@@ -87,4 +103,7 @@ Private Sub Import(ByVal filename)
 	file.Close
 
 	ExecuteGlobal(code)
+
+	Set fso = Nothing
+	Set sh = Nothing
 End Sub
