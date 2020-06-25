@@ -4,7 +4,7 @@ Python's interactive mode is very convenient, because you can try simple stuff
 without having to write it to a script first. Since I had to do a lot of
 VBScript at the time, I wanted to have something like that for VBScript too.
 
-I found [this blog][1] post that had almost exactly what I wanted, except for
+I found [this blog post][1] that had almost exactly what I wanted, except for
 line continuation. Which is what I added (for my own convenience). Plus some
 other convenience features, like importing other VBScripts, or looking up help
 topics in the VBScript help file.
