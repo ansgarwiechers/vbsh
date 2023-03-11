@@ -719,7 +719,10 @@ Sub Main()
 			Help Null
 		ElseIf Left(line, 2) = "? " Then
 			Help Trim(Replace(Mid(line, 3), """", ""))
+		ElseIf Left(line, 2) = "! " Then
+			WScript.Echo Trim(Replace(Mid(line, 3), """", ""))
 		Else
+			If Left(line, 2) = "! " Then line = "WScript.Echo " & Mid(line, 3)
 			On Error Resume Next
 			Err.Clear
 			Execute line
@@ -796,6 +799,7 @@ End Sub
 Private Sub Usage()
 	WScript.StdOut.Write "A simple interactive VBScript Shell." & vbNewLine & vbNewLine _
 		& vbTab & "help                      Print this help." & vbNewLine _
+		& vbTab & "! EXPRESSION              Shortcut for 'WScript.Echo'." & vbNewLine _
 		& vbTab & "?                         Open the VBScript documentation." & vbNewLine _
 		& vbTab & "? ""keyword""               Look up ""keyword"" in the documentation." & vbNewLine _
 		& vbTab & "                          The helpfile (" & Documentation & ") must be installed" & vbNewLine _
